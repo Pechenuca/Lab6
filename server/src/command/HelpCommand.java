@@ -1,21 +1,28 @@
 package command;
 
-import Application.Collection;
-import Application.CommandManager;
-import Application.ConsoleCommands;
+
+import coreSources.Answer;
+import coreSources.Organization;
+import mainPackage.Collection;
+import mainPackage.CommandExecutor;
+import mainPackage.CommandManager;
+import mainPackage.Logger;
 
 import java.util.HashMap;
 
 public class HelpCommand extends Command {
-    private final ConsoleCommands consoleCommands;
+    private final CommandExecutor commandExecutor;
 
-    public HelpCommand(ConsoleCommands consoleCommands){
+    public HelpCommand(CommandExecutor commandExecutor, CommandExecutor commandExecutor1) {
+        this.commandExecutor = commandExecutor1;
         setDescription("вывести справку по доступным командам");
-        this.consoleCommands = consoleCommands;
     }
 
     @Override
-    public void execute(HashMap<String, Command> commandMap, Collection collection, CommandManager mySwitch, String... arg) {
-        consoleCommands.help(commandMap);
+    public Answer execute(HashMap<String, Command> commandMap, Collection collection, CommandManager commandManager,
+                          Organization organization, String... arg) {
+        Logger.info("Выполнение команды Filter");
+        return commandExecutor.help(commandMap);
     }
+
 }

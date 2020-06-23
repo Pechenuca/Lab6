@@ -57,38 +57,6 @@ public class Organization implements Comparable<Organization> {
     }
 
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setCoordinates(Coordinates coordinates) {
-        this.coordinates = coordinates;
-    }
-
-    public void setCreationDate(ZonedDateTime creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public void setAnnualTurnover(Long annualTurnover) {
-        this.annualTurnover = annualTurnover;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public void setType(OrganizationType type) {
-        this.type = type;
-    }
-
-    public void setOfficialAddress(Address officialAddress) {
-        this.officialAddress = officialAddress;
-    }
-
     @XmlAttribute
     public int getId() {
         if (id < 0) throw new FieldException();
@@ -155,6 +123,40 @@ public class Organization implements Comparable<Organization> {
                 ", type=" + type +
                 ", officialAddress=" + officialAddress +
                 '}';
+    }
+
+
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCoordinates(Coordinates coordinates) {
+        this.coordinates = coordinates;
+    }
+
+    public void setCreationDate(ZonedDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void setAnnualTurnover(Long annualTurnover) {
+        this.annualTurnover = annualTurnover;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setType(OrganizationType type) {
+        this.type = type;
+    }
+
+    public void setOfficialAddress(Address officialAddress) {
+        this.officialAddress = officialAddress;
     }
 }
 

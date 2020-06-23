@@ -16,7 +16,8 @@ public abstract class Command {
     private boolean needArg = false;
     private String typeOfArg = "no";
 
-    public Answer execute(HashMap<String, Command> hashMap, Collection collection, CommandManager commandManager, Organization organization, String... arg) throws JAXBException {
+    public Answer execute(HashMap<String, Command> hashMap, Collection collection, CommandManager commandManager,
+                          Organization organization, String... arg) throws JAXBException {
         return null;
     }
 

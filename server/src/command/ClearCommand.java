@@ -1,26 +1,36 @@
 package command;
 
-import Application.ArgException;
-import Application.Collection;
-import Application.CommandManager;
-import Application.ConsoleCommands;
+
+
+import coreSources.Answer;
+import coreSources.Organization;
+import exception.ArgException;
+import mainPackage.Collection;
+import mainPackage.CommandExecutor;
+import mainPackage.CommandManager;
+import mainPackage.Logger;
 
 import javax.xml.bind.JAXBException;
 import java.util.HashMap;
 
 public class ClearCommand extends Command{
-    public final ConsoleCommands consoleCommands;
+    public final CommandExecutor commandExecutor;
 
-    public ClearCommand(ConsoleCommands consoleCommands) {
+    public ClearCommand(CommandExecutor commandExecutor) {
+        this.commandExecutor = commandExecutor;
         setDescription("очистить коллекцию");
-        this.consoleCommands = consoleCommands;
     }
 
     @Override
-    public void execute(HashMap<String, Command> hashMap, Collection collection, CommandManager commandManager, String... arg) throws JAXBException {
-        if (arg.length > 0) throw new ArgException();
+    public Answer execute(HashMap<String, Command> hashMap, Collection collection, CommandManager commandManager,
+                          Organization organization, String... arg) throws JAXBException {
+        Logger.info("Выполнение команды clear");
+        if (arg.length > 0) {
+            Logger.error("Выполнение провалено");
+            throw new ArgException();
+        }
         else {
-            consoleCommands.clear((Application.Collection) collection);
+           return commandExecutor.clear(collection);
         }
     }
 }

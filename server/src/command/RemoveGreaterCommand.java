@@ -1,26 +1,33 @@
 package command;
 
-import Application.ArgException;
-import Application.Collection;
-import Application.CommandManager;
-import Application.ConsoleCommands;
+
+import coreSources.Answer;
+import coreSources.Organization;
+import exception.ArgException;
+import mainPackage.Collection;
+import mainPackage.CommandExecutor;
+import mainPackage.CommandManager;
+import mainPackage.Logger;
 
 import javax.xml.bind.JAXBException;
 import java.util.HashMap;
 
 public class RemoveGreaterCommand extends Command{
-    private final ConsoleCommands consoleCommands;
+    private final CommandExecutor commandExecutor;
 
-    public RemoveGreaterCommand(ConsoleCommands consoleCommands) {
+    public RemoveGreaterCommand(CommandExecutor commandExecutor) {
+        this.commandExecutor = commandExecutor;
         setDescription("удалить из коллекции все элементы, превышающие заданный");
-        this.consoleCommands = consoleCommands;
+        setNeedOrg(true);
     }
 
     @Override
-    public void execute(HashMap<String, Command> commandMap, Collection collection, CommandManager mySwitch, String... arg) throws JAXBException {
+    public Answer execute(HashMap<String, Command> commandMap, Collection collection, CommandManager commandManager,
+                          Organization organization, String... arg) throws JAXBException {
+        Logger.info("Выполнение команды REMOVEGREATER");
         if (arg.length > 0) throw new ArgException();
         else {
-            consoleCommands.removeGreater(collection);
+            return commandExecutor.removeGreater(collection, organization);
         }
     }
 }

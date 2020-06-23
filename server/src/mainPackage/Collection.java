@@ -1,5 +1,6 @@
 package mainPackage;
 
+import coreSources.Answer;
 import coreSources.Factory;
 import coreSources.Organization;
 import exception.FileException;
@@ -7,29 +8,23 @@ import exception.FileException;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.Vector;
+import java.util.*;
 
 public class Collection {
     private File file;
-    private Vector<Organization> vectorOrg = new Vector<>();
+    private Set<Organization> collection = new LinkedHashSet<Organization>();
+
     private ZonedDateTime creationTime;
     private Factory factory = new Factory();
     private String type = getCollection().getClass().getTypeName();
-
-    public Vector<Organization> getVector() {
-        return vectorOrg;
-    }
-
 
     Collection(File file) {
         FileReader fileReader = new FileReader();
         this.file = file;
         try {
             Vector<Organization> collection1 = fileReader.read(file);
-            vectorOrg.addAll(collection1);
+            collection.addAll(collection1);
         } catch (FileException | FileNotFoundException e) {
             System.out.println(e.getMessage());
         }
@@ -37,15 +32,15 @@ public class Collection {
     }
 
 
-    public void add() throws JAXBException {
-        Organization organization = factory.createOrganization();
-        getVector().add(organization);
+    public boolean add(Organization organization) throws JAXBException {
+        int size = getCollection().size();
+        getCollection().add(organization);
+        return getCollection().size() > size;
     }
 
-    public boolean addIfMax() throws JAXBException {
-        Organization organization = factory.createOrganization();
+    public boolean addIfMax(Organization organization) throws JAXBException {
         if (isMax(organization)) {
-            getVector().add(organization);
+            getCollection().add(organization);
             return true;
 
         } else {
@@ -55,7 +50,7 @@ public class Collection {
 
     public boolean isMax(Organization organization) {
         boolean i = true;
-        for (Organization organization1 : vectorOrg) {
+        for (Organization organization1 : collection) {
             if (organization.compareTo(organization1) <= 0) {
                 i = false;
                 break;
@@ -64,60 +59,56 @@ public class Collection {
         return i;
     }
 
-    public void show() {
-        if (!getVector().isEmpty()) {
-            int i = 1;
-            for (Organization organization : vectorOrg) {
-                System.out.println("Организация " + i);
-                System.out.println(organization.toString());
-                i++;
-            }
+    public Answer show() {
+     Answer answer;
+    ArrayList<Organization> organizations = new ArrayList<>(Arrays.asList(getCollection().stream().toArray(Organization[]::new)));
+     return new Answer("Список организаций: ", organizations);
+}
 
-        } else {
-            System.out.println("Коллекция пуста");
-        }
-    }
-
-    public void remove_by_id(int id) {
-        if (!getVector().isEmpty()) {
-            for (Organization organization : vectorOrg) {
+    public Answer remove_by_id(int id) {
+        if (!getCollection().isEmpty()) {
+            for (Organization organization : collection) {
                 if (organization.getId() == id) {
-                    vectorOrg.remove(organization);
-                    System.out.println("Организация удалена");
-                    return;
+                    collection.remove(organization);
+                    return new Answer("Организация удалена");
                 }
             }
-            System.out.println("Организация с данным id не найдена");
+            return new Answer("Организация с данным id не найдена");
         } else {
 
-            System.out.println("Коллекция пуста");
+            return new Answer("Коллекцуия пуста");
         }
+
     }
 
-    public void clear() {
-        vectorOrg.clear();
+    public Answer clear() {
+        collection.clear();
+        return new Answer("Коллекция очищена");
     }
 
-    public void remove_first() {
-        if (!getVector().isEmpty()) {
-            vectorOrg.remove(1);
+    public Answer remove_first() {
+        if (!getCollection().isEmpty()) {
+            collection.remove(1);
+            return new Answer("Оргназация удалена");
         } else {
-            System.out.println("коллекция пуста");
+            return new Answer("коллекция пуста");
         }
+
     }
 
-    public void remove_greater() throws JAXBException {
-        if (!getVector().isEmpty()) {
-            Organization newOrganization = factory.createOrganization();
-            Vector<Organization> vector1 = new Vector<>();
+    public Answer remove_greater(Organization newOrganization) throws JAXBException {
+        if (!getCollection().isEmpty()) {
+           Set<Organization> collection1 = new LinkedHashSet<Organization>();
 
-            vectorOrg.forEach(organization -> {
+            collection.forEach(organization -> {
                 if (newOrganization.compareTo(organization) >= 0) {
-                    vector1.add(organization);
+                    collection1.add(organization);
                 }
             });
-            vectorOrg = vector1;
+            collection = collection1;
+
         }
+        return new Answer("Удалены все организации больше заданного");
     }
 
     public String getInfo() {
@@ -127,20 +118,13 @@ public class Collection {
 
     public long count_greater_than_official_address(int address1) {
 
-        return vectorOrg.stream().filter(organization -> organization.getOfficialAddress() > address1).count();
+        return collection.stream().filter(organization -> organization.getOfficialAddress() > address1).count();
 
     }
 
-    public void replace(int id) throws JAXBException {
+    public Answer replace(int id, Organization newOrganization) throws JAXBException {
         if (!getCollection().isEmpty()) {
-            for (Organization organization : getCollection()) {
-                vectorOrg.remove(organization);
-                Organization newOrg = factory.createOrganization();
-                newOrg.setId(id);
-                vectorOrg.add(newOrg);
-                System.out.println("Организация создана");
-                break;
-            }
+
 
         } else {
             System.out.println("организация с таким id не найдена");
@@ -149,19 +133,15 @@ public class Collection {
     }
 
 
-    public void print_descending() {
-        Collections.sort(vectorOrg);
+    public Answer print_descending(Collection collection) {
+        Collections.sort(collection);
         System.out.println("Элементы колекции в порядке убывания:");
-        for (Organization organization : vectorOrg) {
+        for (Organization organization : collection) {
             System.out.println(organization);
         }
 
     }
 
-
-    public void setVector(Vector<Organization> vector) {
-        this.vectorOrg = vector;
-    }
 
     public ZonedDateTime getCreationTime() {
         return creationTime;
@@ -187,8 +167,8 @@ public class Collection {
         return type;
     }
 
-    public Vector<Organization> getCollection() {
-        return vectorOrg;
+    public Set<Organization> getCollection() {
+        return collection;
     }
 
     public void setFile(File file) {
@@ -198,10 +178,10 @@ public class Collection {
     public void remove(String name) {
         if (!getCollection().isEmpty()) {
 
-            for (Organization organization : vectorOrg) {
+            for (Organization organization : collection) {
 
                 if (organization.getName().equals(name)) {
-                    vectorOrg.remove(organization);
+                    collection.remove(organization);
                     System.out.println("Коллекция с данным именем успешно удалена");
                     return;
                 }

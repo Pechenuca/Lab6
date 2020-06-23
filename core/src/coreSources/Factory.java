@@ -1,6 +1,7 @@
 package coreSources;
 
 import javax.xml.bind.JAXBException;
+import java.io.InputStream;
 import java.util.Scanner;
 
 public class Factory {
@@ -33,6 +34,10 @@ public class Factory {
         setOfficialAddress();
         return new Organization(id, name, x, y, coordinates, creationDate, annualTurnover,
                 fullName, type, officialAddress);
+    }
+
+    public void update(InputStream inputStream) {
+        scanner = new Scanner(inputStream);
     }
 
     public void setName() {
@@ -131,11 +136,11 @@ public class Factory {
         System.out.println("Введите адрес");
         String line = scanner.nextLine();
         try {
-            if(line == null) {
+            if (line == null) {
                 System.out.print("Так просто не сломать!");
                 setOfficialAddress();
             }
-            if(line.length() < 5) {
+            if (line.length() < 5) {
                 System.out.println("Такого адреса не может быть!");
                 setOfficialAddress();
             }

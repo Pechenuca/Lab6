@@ -4,7 +4,6 @@ import command.Command;
 import coreSources.Answer;
 import coreSources.Organization;
 
-
 import javax.xml.bind.JAXBException;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -19,7 +18,8 @@ public class CommandManager {
     }
     Scanner scanner;
 
-    public Answer execute(String commandName, HashMap<String, Command> commandHashMap, Collection collection, Organization organization, String... args) throws JAXBException {
+    public Answer execute(String commandName, HashMap<String, Command> commandHashMap, Collection collection,
+                          Organization organization, String... args) throws JAXBException {
         if (!commandName.equals("")) {
             Command command = commandHashMap.get(commandName);
             if (command == null) {

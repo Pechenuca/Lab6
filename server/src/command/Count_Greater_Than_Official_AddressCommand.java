@@ -1,26 +1,35 @@
 package command;
 
-import Application.ArgException;
-import Application.Collection;
-import Application.CommandManager;
-import Application.ConsoleCommands;
+
+import coreSources.Answer;
+import coreSources.Organization;
+import exception.ArgException;
+import mainPackage.Collection;
+import mainPackage.CommandExecutor;
+import mainPackage.CommandManager;
+import mainPackage.Logger;
 
 import java.util.HashMap;
 
 public class Count_Greater_Than_Official_AddressCommand extends Command {
-    private final ConsoleCommands consoleCommands;
+    private final CommandExecutor commandExecutor;
 
-    public Count_Greater_Than_Official_AddressCommand(ConsoleCommands consoleCommands) {
+    public Count_Greater_Than_Official_AddressCommand(CommandExecutor commandExecutor, CommandExecutor commandExecutor1) {
+        this.commandExecutor = commandExecutor1;
         setDescription("вывести элементы, значение поля official address которых больше заданного");
         setArgs(" official address");
-        this.consoleCommands = consoleCommands;
     }
 
     @Override
-    public void execute(HashMap<String, Command> commandMap, Collection collection, CommandManager mySwitch, String... arg) {
-        if (arg.length != 1) throw new ArgException();
+    public Answer execute(HashMap<String, Command> commandMap, Collection collection, CommandManager commandManager,
+                          Organization organization, String... arg) {
+        Logger.info("Выполнение команды COUNT GREATER THAN ADDRESS");
+        if (arg.length != 1) {
+            Logger.error("Беды с выполнением");
+            throw new ArgException();
+        }
         else {
-            consoleCommands.count_greater_than_official_address(collection,arg[0]);
+            return commandExecutor.count_greater_than_official_address(collection,arg[0]);
         }
     }
 }

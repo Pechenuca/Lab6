@@ -1,26 +1,32 @@
 package command;
 
-import Application.ArgException;
-import Application.Collection;
-import Application.CommandManager;
-import Application.ConsoleCommands;
+
+import coreSources.Answer;
+import coreSources.Organization;
+import exception.ArgException;
+import mainPackage.Collection;
+import mainPackage.CommandExecutor;
+import mainPackage.CommandManager;
+import mainPackage.Logger;
 
 import javax.xml.bind.JAXBException;
 import java.util.HashMap;
 
 public class Add_If_MaxCommand extends Command {
-    private final ConsoleCommands consoleCommands;
+    private final CommandExecutor commandExecutor;
 
-    public Add_If_MaxCommand(ConsoleCommands consoleCommands) {
+    public Add_If_MaxCommand(CommandExecutor commandExecutor) {
         setDescription("добавить новый элемент в коллекцию, если его значение превышает значение наибольшего элемента этой коллекции");
-        this.consoleCommands = consoleCommands;
+        this.commandExecutor = commandExecutor;
     }
 
     @Override
-    public void execute(HashMap<String, Command> commandMap, Collection collection, CommandManager mySwitch, String... arg) throws JAXBException {
+    public Answer execute(HashMap<String, Command> commandMap, Collection collection, CommandManager commandManager,
+                           Organization organization, String... arg) throws JAXBException {
+        Logger.info("Выполнение команды ADD_IF_MAX");
         if (arg.length > 0) throw new ArgException();
         else {
-            consoleCommands.addIfMax(collection);
+            return commandExecutor.addIfMax(collection, organization);
         }
     }
 }

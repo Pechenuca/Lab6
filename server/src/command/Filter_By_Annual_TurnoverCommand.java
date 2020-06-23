@@ -7,6 +7,7 @@ import exception.ArgException;
 import mainPackage.Collection;
 import mainPackage.CommandExecutor;
 import mainPackage.CommandManager;
+import mainPackage.Logger;
 
 import java.util.HashMap;
 
@@ -20,10 +21,16 @@ public class Filter_By_Annual_TurnoverCommand extends Command{
     }
 
     @Override
-    public Answer execute(HashMap<String, Command> commandMap, Collection collection, CommandManager mySwitch, Organization organization, String... arg) {
-        if (arg.length != 1) throw new ArgException();
+    public Answer execute(HashMap<String, Command> commandMap, Collection collection, CommandManager commandManager,
+                          Organization organization, String... arg) {
+        Logger.info("Выполнение команды FILTER");
+        if (arg.length != 1) {
+            Logger.error("Беды с выполнением");
+            throw new ArgException();
+
+        }
         else {
-           return commandExecutor();
+           return commandExecutor.filterTurnover(collection, arg[0]);
         }
     }
 }

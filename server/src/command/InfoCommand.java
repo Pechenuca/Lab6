@@ -1,25 +1,34 @@
 package command;
 
-import Application.ArgException;
-import Application.Collection;
-import Application.CommandManager;
-import Application.ConsoleCommands;
+import coreSources.Answer;
+import coreSources.Organization;
+import exception.ArgException;
+import mainPackage.Collection;
+import mainPackage.CommandExecutor;
+import mainPackage.CommandManager;
+import mainPackage.Logger;
 
 import java.util.HashMap;
 
 public class InfoCommand extends Command {
-    private final ConsoleCommands consoleCommands;
+    private final CommandExecutor commandExecutor;
 
-    public InfoCommand(ConsoleCommands consoleCommands){
-        setDescription("вывести в стандартный поток вывода информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)");
-        this.consoleCommands = consoleCommands;
+    public InfoCommand(CommandExecutor commandExecutor) {
+        this.commandExecutor = commandExecutor;
+        setDescription("вывести в стандартный поток вывода информацию о коллекции " +
+                "(тип, дата инициализации, количество элементов и т.д.)");
+        setNeedOrg(false);
     }
 
     @Override
-    public void execute(HashMap<String, Command> commandMap, Collection collection, CommandManager mySwitch, String... arg) {
-        if (arg.length > 0) throw new ArgException();
-        else {
-            consoleCommands.info((Application.Collection) collection);
+    public Answer execute(HashMap<String, Command> commandMap, Collection collection, CommandManager commandManager,
+                          Organization organization, String... arg) {
+        Logger.info("Выполнение команды INFO");
+        if (arg.length > 0) {
+            Logger.error("Беды с выполнением");
+            throw new ArgException();
+        } else {
+            return commandExecutor.info(collection);
         }
     }
 }

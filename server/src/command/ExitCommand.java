@@ -1,9 +1,12 @@
 package command;
 
 
-import coreSources.*;
-import mainPackage.*;
-
+import coreSources.Answer;
+import coreSources.Organization;
+import mainPackage.Collection;
+import mainPackage.CommandExecutor;
+import mainPackage.CommandManager;
+import mainPackage.Logger;
 
 import java.util.HashMap;
 
@@ -16,7 +19,9 @@ public class ExitCommand extends Command {
         }
 
         @Override
-        public Answer execute(HashMap<String, Command> commandMap, Collection collection, CommandManager mySwitch, String... arg) {
+        public Answer execute(HashMap<String, Command> commandMap, Collection collection, CommandManager commandManager,
+                              Organization organization, String... arg) {
+            Logger.info("Выполнение команды EXIT");
             return commandExecutor.exit();
         }
     }

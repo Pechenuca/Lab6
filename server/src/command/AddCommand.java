@@ -1,27 +1,33 @@
 package command;
 
-import Application.ArgException;
-import Application.Collection;
-import Application.CommandManager;
-import Application.ConsoleCommands;
+
+import coreSources.Answer;
+import coreSources.Organization;
+import exception.ArgException;
+import mainPackage.Collection;
+import mainPackage.CommandExecutor;
+import mainPackage.CommandManager;
+import mainPackage.Logger;
 
 import javax.xml.bind.JAXBException;
 import java.util.HashMap;
 
 public class AddCommand extends Command {
-    private final ConsoleCommands consoleCommands;
+    private final CommandExecutor commandExecutor;
 
 
-    public AddCommand(ConsoleCommands consoleCommands) {
+    public AddCommand(CommandExecutor commandExecutor) {
+        this.commandExecutor = commandExecutor;
         setDescription("добавить новый элемент в коллекцию");
-        this.consoleCommands = consoleCommands;
+        setNeedOrg(true);
     }
 
     @Override
-    public void execute(HashMap<String, Command> hashMap, Collection collection, CommandManager commandManager, String... arg) throws JAXBException {
+    public Answer execute(HashMap<String, Command> hashMap, Collection collection, CommandManager mySwitch, Organization organization, String... arg) throws JAXBException {
+        Logger.info("Выполнение команды ADD");
         if (arg.length > 0) throw new ArgException();
         else {
-            consoleCommands.add((Application.Collection) collection);
+            return commandExecutor.add(collection, organization);
         }
     }
 }
