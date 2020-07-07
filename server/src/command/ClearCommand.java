@@ -8,7 +8,7 @@ import exception.ArgException;
 import mainPackage.Collection;
 import mainPackage.CommandExecutor;
 import mainPackage.CommandManager;
-import mainPackage.Logger;
+import mainPackage.MyLogger;
 
 import javax.xml.bind.JAXBException;
 import java.util.HashMap;
@@ -24,9 +24,9 @@ public class ClearCommand extends Command{
     @Override
     public Answer execute(HashMap<String, Command> hashMap, Collection collection, CommandManager commandManager,
                           Organization organization, String... arg) throws JAXBException {
-        Logger.info("Выполнение команды clear");
+        MyLogger.info("Выполнение команды clear");
         if (arg.length > 0) {
-            Logger.error("Выполнение провалено");
+            MyLogger.error("Выполнение провалено");
             throw new ArgException();
         }
         else {

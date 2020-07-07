@@ -7,7 +7,7 @@ import exception.ArgException;
 import mainPackage.Collection;
 import mainPackage.CommandExecutor;
 import mainPackage.CommandManager;
-import mainPackage.Logger;
+import mainPackage.MyLogger;
 
 import javax.xml.bind.JAXBException;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ public class Add_If_MaxCommand extends Command {
     @Override
     public Answer execute(HashMap<String, Command> commandMap, Collection collection, CommandManager commandManager,
                            Organization organization, String... arg) throws JAXBException {
-        Logger.info("Выполнение команды ADD_IF_MAX");
+        MyLogger.info("Выполнение команды ADD_IF_MAX");
         if (arg.length > 0) throw new ArgException();
         else {
             return commandExecutor.addIfMax(collection, organization);

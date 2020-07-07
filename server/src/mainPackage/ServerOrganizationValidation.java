@@ -5,7 +5,7 @@ import exception.FieldException;
 
 public class ServerOrganizationValidation {
     public static boolean ValidateOrganization(Organization organization) {
-        Logger.info("Валидация организации");
+        MyLogger.info("Валидация организации");
         try{
             organization.getName();
             organization.getAnnualTurnover();
@@ -16,10 +16,10 @@ public class ServerOrganizationValidation {
             organization.getType();
             organization.getAnnualTurnover();
 
-            Logger.info("парам-пам-пам");
+            MyLogger.info("парам-пам-пам");
             return true;
         } catch (FieldException | NullPointerException e) {
-            Logger.error("Беды с рабочим");
+            MyLogger.error("Беды с рабочим");
             return false;
         }
     }

@@ -57,6 +57,7 @@ public class Organization implements Comparable<Organization> {
     }
 
 
+
     @XmlAttribute
     public int getId() {
         if (id < 0) throw new FieldException();

@@ -8,5 +8,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="core" />
+    <orderEntry type="module" module-name="server" />
+    <orderEntry type="library" name="Simple Logging Facade for Java:1.7.30" level="application" />
   </component>
 </module>

@@ -23,42 +23,42 @@ public class CommandExecutor {
         for (Map.Entry<String, Command> entry : commandHashMap.entrySet()) {
             answer += entry.getKey() + entry.getValue().getArgs() + ": " + entry.getValue().getDescription();
         }
-        Logger.info("Выполнение успешно");
+        MyLogger.info("Выполнение успешно");
         return new Answer(answer);
     }
 
     public Answer exit() {
-        Logger.info("Выполнение успешно");
+        MyLogger.info("Выполнение успешно");
         return new Answer("Таки до новых встреч!");
     }
 
     public Answer add(Collection collection, Organization organization) throws JAXBException {
         if (collection.add(organization)) {
-            Logger.info("Выполнение успешно");
+            MyLogger.info("Выполнение успешно");
             return new Answer("Организация добавлена");
         } else {
-            Logger.error("Беды с выполнением");
+            MyLogger.error("Беды с выполнением");
             return new Answer("Не удалось добавить организацию");
         }
     }
 
     public Answer info(Collection collection) {
-        Logger.info("Выполнение успешо");
+        MyLogger.info("Выполнение успешо");
        return new Answer(collection.getInfo());
     }
 
     public Answer show(Collection collection) {
-        Logger.info("Выполнение успешно");
+        MyLogger.info("Выполнение успешно");
         return collection.show();
     }
 
     public Answer remove_by_id(Collection collection, int id) {
-        Logger.info("Выполнение успешно");
+        MyLogger.info("Выполнение успешно");
         return collection.remove_by_id(id);
     }
 
     public Answer update(Collection collection, int id, Organization organization) throws JAXBException {
-        Logger.info("Выполнение успешно");
+        MyLogger.info("Выполнение успешно");
         return collection.replace(id, organization);
     }
 
@@ -68,13 +68,13 @@ public class CommandExecutor {
     }
 
     public Answer remove_first(Collection collection) {
-        Logger.info("Выполнение успешно");
+        MyLogger.info("Выполнение успешно");
         return collection.remove_first();
     }
 
 
     public Answer remove_grater(Collection collection, Organization organization) throws JAXBException {
-        Logger.info("Выполнение успешно");
+        MyLogger.info("Выполнение успешно");
         return new Answer("Объекты удалены");
     }
 
@@ -127,7 +127,7 @@ public class CommandExecutor {
         } catch (FileNotFoundException e) {
             return new Answer("Скрипт не найден");
         }
-        Logger.info("Выполнение успешно");
+        MyLogger.info("Выполнение успешно");
         return new Answer(answer + "Скрипт успешно выполнен");
     }
 
@@ -135,12 +135,12 @@ public class CommandExecutor {
     public Answer count_greater_than_official_address(Collection collection, String arg) {
         try {
             int official_address = Integer.parseInt(arg);
-            Logger.info("Выполнение успешно");
+            MyLogger.info("Выполнение успешно");
             return new Answer("На данный момент мы имеем " + collection.count_greater_than_official_address(official_address)
                     + " организаций, чей " +
                     "адрес больше " + official_address + " букв");
         } catch (NumberFormatException e) {
-            Logger.error("Беды с выполнением");
+            MyLogger.error("Беды с выполнением");
             throw new ArgException();
         }
     }
@@ -148,23 +148,23 @@ public class CommandExecutor {
 
     public Answer addIfMax(Collection collection, Organization organization) throws JAXBException {
         if (collection.addIfMax(organization)) {
-            Logger.info("Выполнение успешно");
+            MyLogger.info("Выполнение успешно");
             return new Answer("Организация успешно добавлена");
         } else {
-            Logger.info("Выполнение успешно");
+            MyLogger.info("Выполнение успешно");
             return new Answer("Значение организации меньше максимального!");
         }
     }
 
     public Answer removeGreater(Collection collection, Organization organization) throws JAXBException {
-        Logger.info("Выполнение успешно");
+        MyLogger.info("Выполнение успешно");
         return collection.remove_greater(organization);
     }
 
 
     public Answer print_descending(Collection collection) {
-        Logger.info("Выполнение успешно");
-        return collection.print_descending(collection);
+        MyLogger.info("Выполнение успешно");
+        return collection.print_descending();
 
     }
 
@@ -176,10 +176,14 @@ public class CommandExecutor {
                 answer.append(organization.toString());
             }
         }
-        Logger.info("Выполнение успешно");
+        MyLogger.info("Выполнение успешно");
         return new Answer(answer.toString());
     }
-
+    public Answer save(Collection collection) {
+        collection.save(collection);
+        MyLogger.info("Выполнение успешно");
+        return new Answer("Коллекция успешно сохранена");
+    }
     public void remove(Collection collection, String name) {
         collection.remove(name);
     }

@@ -6,7 +6,7 @@ import exception.ArgException;
 import mainPackage.Collection;
 import mainPackage.CommandExecutor;
 import mainPackage.CommandManager;
-import mainPackage.Logger;
+import mainPackage.MyLogger;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
@@ -15,8 +15,8 @@ import java.util.HashMap;
 public class Script extends Command {
     private final CommandExecutor commandExecutor;
 
-    public Script(CommandExecutor commandExecutor, CommandExecutor commandExecutor1) {
-        this.commandExecutor = commandExecutor1;
+    public Script(CommandExecutor commandExecutor) {
+        this.commandExecutor = commandExecutor;
         setDescription("Добавить новый элемент в коллецию");
         setArgs(" fileName");
         setNeedArg(true);
@@ -30,7 +30,7 @@ public class Script extends Command {
                           Organization organization, String... arg) throws JAXBException {
         String path;
         String filePath = System.getenv("INPUT_PATH");
-        Logger.info("Выполнение команды SCRIPT");
+        MyLogger.info("Выполнение команды SCRIPT");
         if(filePath == null) {
             path =  "server\\src\\Files\\";
         } else {

@@ -8,5 +8,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="core" />
+    <orderEntry type="library" name="xstream-1.4.10 (1)" level="application" />
+    <orderEntry type="library" name="Simple Logging Facade for Java:1.7.30" level="application" />
   </component>
 </module>

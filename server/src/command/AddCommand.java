@@ -7,7 +7,7 @@ import exception.ArgException;
 import mainPackage.Collection;
 import mainPackage.CommandExecutor;
 import mainPackage.CommandManager;
-import mainPackage.Logger;
+import mainPackage.MyLogger;
 
 import javax.xml.bind.JAXBException;
 import java.util.HashMap;
@@ -24,7 +24,7 @@ public class AddCommand extends Command {
 
     @Override
     public Answer execute(HashMap<String, Command> hashMap, Collection collection, CommandManager mySwitch, Organization organization, String... arg) throws JAXBException {
-        Logger.info("Выполнение команды ADD");
+        MyLogger.info("Выполнение команды ADD");
         if (arg.length > 0) throw new ArgException();
         else {
             return commandExecutor.add(collection, organization);

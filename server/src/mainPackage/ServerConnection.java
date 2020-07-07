@@ -12,43 +12,43 @@ public class ServerConnection {
     private SocketChannel socketChannel;
     private int port;
 
-    public ServerConnection(int port) throws ConnectException {
+    public ServerConnection() throws ConnectException {
         try {
-            port = 1337;
+            int port = 1337;
             SocketAddress socketAddress = new InetSocketAddress(port);
             serverSocketChannel = ServerSocketChannel.open();
             serverSocketChannel.bind(socketAddress);
             serverSocketChannel.configureBlocking(false);
-            Logger.info("Каналы связи переведены в неблокирующий режим");
+            MyLogger.info("Каналы связи переведены в неблокирующий режим");
         } catch (IOException e) {
             e.printStackTrace();
-            Logger.error("Соединение не успешно");
+            MyLogger.error("Соединение не успешно");
             throw new ConnectException("Беды с подлючением");
         }
     }
 
     public void connect() throws ConnectException {
         try {
-            Logger.info("Попытка соединения с клиентом");
+            MyLogger.info("Попытка соединения с клиентом");
             socketChannel = serverSocketChannel.accept();
-            Logger.info("Соединение успешно");
+            MyLogger.info("Соединение успешно");
             if (socketChannel != null) {
                 socketChannel.configureBlocking(false);
             }
         } catch (IOException e) {
-            Logger.error("Беды с соединением");
+            MyLogger.error("Беды с соединением");
             throw new ConnectException("Возникли беды с подключением");
         }
     }
 
     public void closeSocketChannel() {
         try {
-            Logger.info("Закрытие сокета");
+            MyLogger.info("Закрытие сокета");
             socketChannel.close();
             socketChannel = null;
-            Logger.info("Успех");
+            MyLogger.info("Успех");
         } catch (IOException e) {
-            Logger.error("Беды с закрытием сокета");
+            MyLogger.error("Беды с закрытием сокета");
         }
     }
 

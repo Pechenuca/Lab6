@@ -7,7 +7,7 @@ import exception.ArgException;
 import mainPackage.Collection;
 import mainPackage.CommandExecutor;
 import mainPackage.CommandManager;
-import mainPackage.Logger;
+import mainPackage.MyLogger;
 
 import javax.xml.bind.JAXBException;
 import java.util.HashMap;
@@ -24,7 +24,7 @@ public class RemoveGreaterCommand extends Command{
     @Override
     public Answer execute(HashMap<String, Command> commandMap, Collection collection, CommandManager commandManager,
                           Organization organization, String... arg) throws JAXBException {
-        Logger.info("Выполнение команды REMOVEGREATER");
+        MyLogger.info("Выполнение команды REMOVEGREATER");
         if (arg.length > 0) throw new ArgException();
         else {
             return commandExecutor.removeGreater(collection, organization);

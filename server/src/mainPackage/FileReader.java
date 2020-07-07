@@ -8,7 +8,7 @@ import java.util.Scanner;
 import java.util.Vector;
 
 public class FileReader {
-    File file = new File("src\\Application\\file.xml");
+    File file = new File("server/src/file/file.xml");
 
     public FileReader() {
     }

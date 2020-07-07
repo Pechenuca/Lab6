@@ -10,7 +10,7 @@ import java.nio.channels.SocketChannel;
 public class CommandReader {
     private CoreCommand coreCommand;
     public void getCommandFromClient(ServerConnection serverConnection) throws ConnectException {
-        Logger.info("Получение команды от клиента");
+        MyLogger.info("Получение команды от клиента");
         try{
             Thread.sleep(1000);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -20,7 +20,7 @@ public class CommandReader {
             while((n=serverConnection.getSocketChannel().read(byteBuffer))>0);
             {
                 i++;
-                Logger.info("Заполнение буфера номер - " + i);
+                MyLogger.info("Заполнение буфера номер - " + i);
                 byteBuffer.flip();
                 byteArrayOutputStream.write(byteBuffer.array(), 0, n);
                 byteBuffer.clear();
@@ -29,25 +29,25 @@ public class CommandReader {
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
             ObjectInputStream objectInputStream = new ObjectInputStream((byteArrayInputStream));
             setCoreCommand((CoreCommand) objectInputStream.readObject());
-            Logger.info("Выполнение успешно");
+            MyLogger.info("Выполнение успешно");
         }
         } catch (InterruptedException e) {
-            Logger.error("Не удалось поспать *Как и мне, когда я писал это(((*");
+            MyLogger.error("Не удалось поспать *Как и мне, когда я писал это(((*");
         }
         catch (ClassNotFoundException e) {
-            Logger.error("Возникли беды с распознаванием класса команды");
+            MyLogger.error("Возникли беды с распознаванием класса команды");
             throw new ConnectException("Класс не найден... Беда(");
         }
         catch (IOException e) {
             e.printStackTrace();
-            Logger.error("Не удалось получить команду");
+            MyLogger.error("Не удалось получить команду");
             serverConnection.closeSocketChannel();
             throw new ConnectException("Возникли беды с чтением команды с клиента");
         }
     }
 
     public void sendToClient(Object object, SocketChannel socketChannel) throws IOException {
-        Logger.info("Отправка клиенту");
+        MyLogger.info("Отправка клиенту");
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
         objectOutputStream.writeObject(object);
@@ -60,7 +60,7 @@ public class CommandReader {
         byteBuffer.clear();
         byteArrayOutputStream.flush();
         objectOutputStream.flush();
-        Logger.info("Успех");
+        MyLogger.info("Успех");
     }
 
     public CoreCommand getCoreCommand() {

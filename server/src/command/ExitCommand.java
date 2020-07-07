@@ -6,7 +6,7 @@ import coreSources.Organization;
 import mainPackage.Collection;
 import mainPackage.CommandExecutor;
 import mainPackage.CommandManager;
-import mainPackage.Logger;
+import mainPackage.MyLogger;
 
 import java.util.HashMap;
 
@@ -21,7 +21,7 @@ public class ExitCommand extends Command {
         @Override
         public Answer execute(HashMap<String, Command> commandMap, Collection collection, CommandManager commandManager,
                               Organization organization, String... arg) {
-            Logger.info("Выполнение команды EXIT");
+            MyLogger.info("Выполнение команды EXIT");
             return commandExecutor.exit();
         }
     }

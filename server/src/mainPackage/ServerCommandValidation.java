@@ -12,21 +12,21 @@ public class ServerCommandValidation {
     Factory factory = new Factory();
 
     boolean CheckOrganization(String commandName) {
-        for(CoreCommand coreCommand1 : coreCommands) {
-            if(commandName.equals(coreCommand1.getName())) {
+        for (CoreCommand coreCommand1 : coreCommands) {
+            if (commandName.equals(coreCommand1.getName())) {
                 return coreCommand1.isNeedOrganization();
             }
         }
-        throw new Serve
+        throw new ServerValidateException();
     }
 
     void validateCommand(CoreCommand coreCommand, ArrayList<CoreCommand> coreCommands) {
         boolean isValidate = false;
         try {
-            for(CoreCommand coreCommand1 : coreCommands) {
-                if(coreCommand1.getName().equals((coreCommand.getName()))) {
+            for (CoreCommand coreCommand1 : coreCommands) {
+                if (coreCommand1.getName().equals((coreCommand.getName()))) {
                     isValidate = true;
-                    if(coreCommand1.isNeedArg()) {
+                    if (coreCommand1.isNeedArg()) {
                         switch (coreCommand1.getTypeOfArg().toLowerCase().trim()) {
                             case "float":
                                 Float.parseFloat(coreCommand.getArg());
@@ -42,16 +42,22 @@ public class ServerCommandValidation {
                                 break;
 
                         }
-                    }else if(coreCommand.getArg()!=null) {
+                    } else if (coreCommand.getArg() != null) {
                         throw new ServerValidateException();
                     }
-                }
-                if(coreCommand1.isNeedOrganization() &&
-                        !ServerOrganizationValidation.ValidateOrganization(coreCommand.getOrganization())) {
+                    if (coreCommand1.isNeedOrganization() &&
+                            !ServerOrganizationValidation.ValidateOrganization(coreCommand.getOrganization())) {
+                        throw new ServerValidateException();
+                    } else if (!coreCommand1.isNeedOrganization() && coreCommand.getOrganization() != null) {
+                        throw new ServerValidateException();
+                    }
 
                 }
             }
-
+            if (!isValidate) throw new ServerValidateException();
+        } catch (NumberFormatException e) {
+            throw new ServerValidateException();
         }
     }
 }
+

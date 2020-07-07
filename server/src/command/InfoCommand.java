@@ -6,7 +6,7 @@ import exception.ArgException;
 import mainPackage.Collection;
 import mainPackage.CommandExecutor;
 import mainPackage.CommandManager;
-import mainPackage.Logger;
+import mainPackage.MyLogger;
 
 import java.util.HashMap;
 
@@ -23,9 +23,9 @@ public class InfoCommand extends Command {
     @Override
     public Answer execute(HashMap<String, Command> commandMap, Collection collection, CommandManager commandManager,
                           Organization organization, String... arg) {
-        Logger.info("Выполнение команды INFO");
+        MyLogger.info("Выполнение команды INFO");
         if (arg.length > 0) {
-            Logger.error("Беды с выполнением");
+            MyLogger.error("Беды с выполнением");
             throw new ArgException();
         } else {
             return commandExecutor.info(collection);

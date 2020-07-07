@@ -1,5 +1,7 @@
 package mainPackage;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
 import coreSources.Answer;
 import coreSources.Factory;
 import coreSources.Organization;
@@ -8,13 +10,16 @@ import exception.FileException;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Collection {
     private File file;
     private Set<Organization> collection = new LinkedHashSet<Organization>();
-
+    private XStream xstream = new XStream(new StaxDriver());
+    private ArrayList<Organization> orgArray = new ArrayList<>();
     private ZonedDateTime creationTime;
     private Factory factory = new Factory();
     private String type = getCollection().getClass().getTypeName();
@@ -81,9 +86,9 @@ public class Collection {
 
     }
 
-    public Answer clear() {
+    public Answer clear(){
         collection.clear();
-        return new Answer("Коллекция очищена");
+        return new Answer("Коллекция очищена!");
     }
 
     public Answer remove_first() {
@@ -124,20 +129,39 @@ public class Collection {
 
     public Answer replace(int id, Organization newOrganization) throws JAXBException {
         if (!getCollection().isEmpty()) {
-
+            if (collection.stream().filter(worker -> worker.getId()==id).count() >= 1) {
+                LinkedHashSet<Organization> organizations = new LinkedHashSet<>();
+                collection.stream().filter(worker -> worker.getId() != id).forEach(organizations::add);
+                newOrganization.setId(id);
+                organizations.add(newOrganization);
+                collection = organizations;
+                return new Answer("Орагнизация заменен");
+            }else return new Answer("Организация не найдет");
 
         } else {
-            System.out.println("организация с таким id не найдена");
+            return new Answer("Коллекция пуста!");
         }
 
     }
 
 
-    public Answer print_descending(Collection collection) {
-        Collections.sort(collection);
-        System.out.println("Элементы колекции в порядке убывания:");
-        for (Organization organization : collection) {
-            System.out.println(organization);
+    public Answer print_descending() {
+        ArrayList<Organization> organizations = new ArrayList<Organization>(collection);
+        AtomicReference<String> answer = new AtomicReference<>("");
+        organizations.stream().sorted().forEach(person -> answer.updateAndGet(v -> v + person + "\n"));
+        return new Answer(answer.get());
+
+    }
+    public Answer save(Collection collection) {
+        try {
+            PrintWriter printWriter = new PrintWriter(file);
+            String xml = xstream.toXML(orgArray);
+            System.out.println(xml);
+            printWriter.println(xml);
+            printWriter.close();
+            return new Answer("сохранение успешно");
+        } catch (Exception ex) {
+           return new Answer("There was a problem writing the file.xml.");
         }
 
     }
