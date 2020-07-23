@@ -1,24 +1,24 @@
 package mainPackage;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.ConnectException;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
+import java.io.InputStreamReader;
+import java.net.*;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
-public class ServerConnection {
-    private ServerSocketChannel serverSocketChannel;
-    private SocketChannel socketChannel;
-    private int port;
-
+public class ServerConnection extends Thread {
+    DatagramSocket socket = null;
+    BufferedReader in = null;
+    String str = null;
+    byte[] buffer ;
+    DatagramPacket packet;
+    InetAddress address;
+    int port;
     public ServerConnection() throws ConnectException {
         try {
-            int port = 1337;
-            SocketAddress socketAddress = new InetSocketAddress(port);
-            serverSocketChannel = ServerSocketChannel.open();
-            serverSocketChannel.bind(socketAddress);
-            serverSocketChannel.configureBlocking(false);
+            socket = new DatagramSocket(8800);
+            call();
             MyLogger.info("Каналы связи переведены в неблокирующий режим");
         } catch (IOException e) {
             e.printStackTrace();
@@ -26,53 +26,34 @@ public class ServerConnection {
             throw new ConnectException("Беды с подлючением");
         }
     }
-
-    public void connect() throws ConnectException {
+    public void call() {
         try {
-            MyLogger.info("Попытка соединения с клиентом");
-            socketChannel = serverSocketChannel.accept();
-            MyLogger.info("Соединение успешно");
-            if (socketChannel != null) {
-                socketChannel.configureBlocking(false);
+            while (true) {
+                buffer = new byte[256];
+                packet = new DatagramPacket(buffer, buffer.length);
+                socket.receive(packet);
+                if (packet == null) break;
+                System.out.println("Request string for sending to client ");
+
+                try {
+                    in = new BufferedReader(new InputStreamReader(System.in));
+
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+                str = in.readLine();
+                buffer = str.getBytes();
+                address = packet.getAddress();
+                port = packet.getPort();
+                packet = new DatagramPacket(buffer, buffer.length, address, port);
+                /* Посылается датаграммный пакет */
+                socket.send(packet);
             }
-        } catch (IOException e) {
-            MyLogger.error("Беды с соединением");
-            throw new ConnectException("Возникли беды с подключением");
+            /* Закрывается поток и сокет */
+            in.close();
+            socket.close();
+        } catch (Exception e) {
+            System.out.println("Error : " + e);
         }
-    }
-
-    public void closeSocketChannel() {
-        try {
-            MyLogger.info("Закрытие сокета");
-            socketChannel.close();
-            socketChannel = null;
-            MyLogger.info("Успех");
-        } catch (IOException e) {
-            MyLogger.error("Беды с закрытием сокета");
-        }
-    }
-
-    public ServerSocketChannel getServerSocketChannel() {
-        return serverSocketChannel;
-    }
-
-    public void setServerSocketChannel(ServerSocketChannel serverSocketChannel) {
-        this.serverSocketChannel = serverSocketChannel;
-    }
-
-    public SocketChannel getSocketChannel() {
-        return socketChannel;
-    }
-
-    public void setSocketChannel(SocketChannel socketChannel) {
-        this.socketChannel = socketChannel;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
     }
 }

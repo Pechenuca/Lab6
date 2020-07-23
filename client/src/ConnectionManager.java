@@ -1,32 +1,50 @@
 import coreSources.Answer;
 import coreSources.CoreCommand;
 import exception.ConnectException;
+import mainPackage.MyLogger;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.InetAddress;
-import java.net.Socket;
+import java.net.*;
 import java.util.Scanner;
 
 public class ConnectionManager {
-    InetAddress address;
     private Integer port;
-    Socket socket;
-    private ObjectOutputStream objectOutputStream;
-    private ObjectInputStream objectInputStream;
+    private DatagramSocket socket;
+    private InetAddress address;
+    private byte[] buffer;
+    static DatagramPacket packet;
+    private String str, str2;
+    static BufferedReader br;
 
-    public ConnectionManager(Integer port, InetAddress address) {
-        this.address = address;
+    public ConnectionManager(Integer port, InetAddress address) throws UnknownHostException {
+        this.address = InetAddress.getByName("localhost");
         this.setPort(port);
     }
 
     public void connect(CommandValidation commandValidation) throws ConnectException {
         try {
-            socket = new Socket(address, getPort());
-            setObjectInputStream(new ObjectInputStream(socket.getInputStream()));
+            socket = new DatagramSocket();
+            buffer = new byte[256];
+            packet = new DatagramPacket(buffer, buffer.length, address, 8800);
+            socket.send(packet);
+            MyLogger.info("Sending request ");
+
+            socket.receive(packet);
+            str = new String(packet.getData());
+            System.out.println("Received message : "+str.trim());
+            System.out.println("Do you want continue (Yes/No) : ");
+            str2 = br.readLine();
+            if(str2.equals("No")) {
+                break;
+            }
+
+        /* Закрывается объект сокет */
+            socket.close();
             System.out.println("Соединение с сервером установлено. Получение списка команд");
-            commandValidation.getCommands(getObjectInputStream());
+            commandValidation.getCommands();
             System.out.println("Команды с сервера получены");
         } catch (IOException e) {
             System.out.println("Не удалось подключиться к серверу!");
@@ -50,7 +68,7 @@ public class ConnectionManager {
     public void disconnect() {
         try {
             socket.close();
-        } catch (IOException | NullPointerException ignored) {
+        } catch (NullPointerException ignored) {
 
         }
     }
@@ -65,7 +83,7 @@ public class ConnectionManager {
     }
     public Answer getAnswerFromServer() {
         try {
-            return (Answer) new ObjectInputStream(socket.getInputStream()).readObject();
+            return (Answer) new DatagramPacket(packet).readObject();
         } catch (IOException  | ClassNotFoundException e) {
             return null;
         }
@@ -87,23 +105,9 @@ public class ConnectionManager {
         this.port = port;
     }
 
-    public Socket getSocket() {
+    public DatagramSocket getSocket() {
         return socket;
     }
 
-    public ObjectOutputStream getObjectOutputStream() {
-        return objectOutputStream;
-    }
 
-    public void setObjectOutputStream(ObjectOutputStream objectOutputStream) {
-        this.objectOutputStream = objectOutputStream;
-    }
-
-    public ObjectInputStream getObjectInputStream() {
-        return objectInputStream;
-    }
-
-    public void setObjectInputStream(ObjectInputStream objectInputStream) {
-        this.objectInputStream = objectInputStream;
-    }
 }

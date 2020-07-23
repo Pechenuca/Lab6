@@ -14,13 +14,13 @@ public class CommandValidation {
 
     Factory factory = new Factory();
 
-    void getCommands(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
+    void getCommands() throws IOException, ClassNotFoundException {
         coreCommands = (List<AbstractCommand> ) objectInputStream.readObject();
     }
     CoreCommand createCommand(String com) throws ValidationException, JAXBException {
         Organization organization = null;
         String[] com1 = com.trim().toLowerCase().split(" ");
-        if (com1.length>1 && CheckWorker(com1[0])){
+        if (com1.length>1 && CheckOrganization(com1[0])){
             CoreCommand coreCommand = new CoreCommand(com1[0],com1[1],factory.createOrganization());
             validateCommand(coreCommand);
             return coreCommand;
@@ -28,7 +28,7 @@ public class CommandValidation {
             CoreCommand coreCommand = new CoreCommand(com1[0],com1[1]);
             validateCommand(coreCommand);
             return coreCommand;
-        } else if (CheckWorker(com1[0])){
+        } else if (CheckOrganization(com1[0])){
             CoreCommand coreCommand = new CoreCommand(com1[0],factory.createOrganization());
             validateCommand(coreCommand);
             return coreCommand;
@@ -38,7 +38,7 @@ public class CommandValidation {
             return coreCommand;
         }
     }
-    boolean CheckWorker(String commandName){
+    boolean CheckOrganization(String commandName){
         for (AbstractCommand abstractCommand : coreCommands){
             if (commandName.equals(abstractCommand.getName())){
                 return abstractCommand.isNeedOrganization();
