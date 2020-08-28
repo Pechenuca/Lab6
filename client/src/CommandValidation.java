@@ -7,6 +7,8 @@ import exception.ValidationException;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.util.List;
 
 public class CommandValidation {
@@ -15,7 +17,7 @@ public class CommandValidation {
     Factory factory = new Factory();
 
     void getCommands() throws IOException, ClassNotFoundException {
-        coreCommands = (List<AbstractCommand> ) objectInputStream.readObject();
+        coreCommands = (List<AbstractCommand>) new DatagramSocket(); //Вообще хз, проверь потом
     }
     CoreCommand createCommand(String com) throws ValidationException, JAXBException {
         Organization organization = null;

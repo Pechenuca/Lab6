@@ -7,43 +7,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.JAXBException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.io.IOException;
+import java.net.*;
 import java.util.Scanner;
 
 public class ClientMain {
-    public static void main(String[] args) throws ClassNotFoundException {
-
-        Logger log = LoggerFactory.getLogger("My logger");
-        Factory factory = new Factory();
+    public static void main(String[] args) throws ClassNotFoundException, SocketException, UnknownHostException {
+        ConnectionManager connectionManager = new ConnectionManager();
         CommandValidation commandValidation = new CommandValidation();
-        Scanner scanner = new Scanner(System.in);
+        if (args.length < 2) {
+            System.out.println("Syntax: QuoteClient <hostname> <port>");
+            return;
+        }
+
+        String hostname = args[0];
+        int port = Integer.parseInt(args[1]);
+
         try {
-            ConnectionManager connectManager =
-                    new ConnectionManager(8800, InetAddress.getLocalHost());
-            String command = "";
-            while (!command.trim().toLowerCase().equals("exit")) {
-                try {
-                    System.out.println("Введите команду");
-                    command = scanner.nextLine();
-                    connectManager.connect(commandValidation);
-                    CoreCommand coreCommand = commandValidation.createCommand(command);
-                    connectManager.sendCommand(coreCommand);
-                    Answer answer = connectManager.getAnswerFromServer();
-                    if (answer != null) {
-                        answer.sort();
-                    }
-                    System.out.println(answer);
-                } catch (ConnectException | JAXBException e) {
-                    e.printStackTrace();
-                } catch (ValidationException e) {
-                    System.out.println("Не удалось подключиться к серверу.");
-                }finally {
-                    connectManager.disconnect();
-                }
-            }
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
+            InetAddress address = InetAddress.getByName(hostname);
+            connectionManager.connect(commandValidation);
+
+        } catch (IOException ex) {
+            System.out.println("Client error: " + ex.getMessage());
+            ex.printStackTrace();
         }
     }
 }
